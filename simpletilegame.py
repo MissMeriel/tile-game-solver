@@ -128,7 +128,7 @@ class Game(turtle.Turtle):
             print(p)
             for r in range(len(p)):
                 for c in range(len(p[0])):
-                    print("marker:{} r:{} c:{}".format(p[r][c], r, c))
+                    #print("marker:{} r:{} c:{}".format(p[r][c], r, c))
                     self.get_color2(p[r][c])
                     self.stamp()
                     int(self.xcor())
@@ -143,9 +143,10 @@ class Game(turtle.Turtle):
             #if(abs(self.xcor()) > width/2.0):
             #    self.setx(0 + tile/2)
             #    print("RESET X")
-            if (abs(self.ycor())+ minitile * max_height > height / 2.0):
+            if (self.ycor() < 0 and abs(self.ycor())+ minitile * max_height > height / 2.0):
                 self.setx(self.xcor() + minitile * max_height)
                 self.sety(250 - tile/2)
+                print("RESET Y")
             self.right(90)
             self.forward(2 * minitile)
             self.left(90)

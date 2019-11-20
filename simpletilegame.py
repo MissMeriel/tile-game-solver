@@ -7,6 +7,7 @@ import sys
 
 #-- constants 
 tile = 100
+window_width = 1000
 width = 500
 height = 500
 flip = False
@@ -17,7 +18,7 @@ STAMP_SIZE = 20.0
 
 #-- screen setup 
 screen = turtle.Screen()
-screen.setup(width, height, 700)
+screen.setup(window_width, height, 700)
 screen.bgcolor("black")
 screen.tracer(1)
 
@@ -31,7 +32,7 @@ class Game(turtle.Turtle):
         self.shape("square")
         ss = tile / STAMP_SIZE
         self.shapesize(ss)
-        self.setpos(-250 + tile/2, 250 - tile/2)
+        self.setpos(-250 -250 + tile/2, 250 - tile/2)
         self.speed(4)
         #-- game attributes
         self.items = board
@@ -74,6 +75,31 @@ class Game(turtle.Turtle):
         elif self.items[r][c] == " ":
             self.fillcolor("black")
 
+    #-- map colors to representation in input file
+    def get_color2(self, marker):
+        if marker == "a":
+            self.fillcolor("white")
+        elif marker == "b":
+            self.fillcolor("blue")
+        elif marker == "%":
+            self.fillcolor("orange")
+        elif marker == "#":
+            self.fillcolor("red")
+        elif marker == "X":
+            self.fillcolor("green")
+        elif marker == "O":
+            self.fillcolor("yellow")
+        elif marker == "g":
+            self.fillcolor("light green")
+        elif marker == "h":
+            self.fillcolor("pink")
+        elif marker == "s":
+            self.fillcolor("lightblue")
+        elif marker == "o":
+            self.fillcolor("gold")
+        elif marker == " ":
+            self.fillcolor("black")
+
     #-- draw the graphical board according to input
     def draw_colors(self):
         for r in range(len(self.items)):
@@ -88,6 +114,42 @@ class Game(turtle.Turtle):
             self.right(90)
             self.forward(tile)
             self.left(90)
+
+    def draw_pieces(self, pieces):
+        # get max height of pieces
+        max_height = get_max_height(pieces)
+        self.setpos(0 + tile/2, 250 - tile/2)
+        self.shapesize(1)
+        minitile=10
+        ss = minitile / STAMP_SIZE
+        self.shapesize(ss)
+        for key in pieces:
+            p = pieces[key]
+            print(p)
+            for r in range(len(p)):
+                for c in range(len(p[0])):
+                    print("marker:{} r:{} c:{}".format(p[r][c], r, c))
+                    self.get_color2(p[r][c])
+                    self.stamp()
+                    int(self.xcor())
+                    int(self.ycor())
+                    self.grid.append((self.xcor(), self.ycor()))  # -- keep a track of position of each tile
+                    self.forward(minitile)
+                self.back(minitile * len(p[0]))
+                self.right(90)
+                self.forward(minitile)
+                self.left(90)
+            curr_pos = self.pos()
+            #if(abs(self.xcor()) > width/2.0):
+            #    self.setx(0 + tile/2)
+            #    print("RESET X")
+            if (abs(self.ycor())+ minitile * max_height > height / 2.0):
+                self.setx(self.xcor() + minitile * max_height)
+                self.sety(250 - tile/2)
+            self.right(90)
+            self.forward(2 * minitile)
+            self.left(90)
+
 
     #-- covers the tiles by stamping the gray color on them 
     def draw_cover(self):
@@ -193,6 +255,14 @@ class Game(turtle.Turtle):
     def reset_second_click(self):
         turtle.onscreenclick(self.second)
 
+def get_max_height(pieces):
+    height = 0
+    for key in pieces.keys():
+        p = pieces[key]
+        if(len(p) > height):
+            height =len(p)
+    return height
+
 def parse_input_file(input_file):
     board = []  # 2D array
     pieces = {} # hashmap of 2D arrays
@@ -237,6 +307,7 @@ def main():
     game = Game()
     game.print_items()
     game.draw_colors()
+    game.draw_pieces(pieces)
     while True:
         user_input = input("Press any key to exit:")
         if user_input:

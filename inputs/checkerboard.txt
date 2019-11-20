@@ -1,15 +1,15 @@
 XOXO
-O
-X
+O   
+X   
 
-X
-O
-X
-O
+X 
+O 
+X 
+O 
 XO
 
-O
-X
+O  
+X  
 OXO
 
 XO
@@ -22,7 +22,7 @@ OX
  O
  X
 XO
-O
+O 
 
 OX
 XO
@@ -32,8 +32,8 @@ X
 O
 X
 
-O
-XO
+O  
+XO 
  XO
 
 OXOXO
@@ -44,8 +44,8 @@ XO
 
 OX
 XO
-O
-X
+O 
+X 
 
   X
   O

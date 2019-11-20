@@ -29,12 +29,9 @@ class Game(turtle.Turtle):
         self.hideturtle()
         self.penup()
         self.shape("square")
-        # self.shapesize(4.8) 4.8 works for a 5x5 grid in 500x500 window
-        ss = tile / STAMP_SIZE # 1 # width / (tile * 4) - 0.2
-        print("ss: {}".format(ss))
+        ss = tile / STAMP_SIZE
         self.shapesize(ss)
         self.setpos(-250 + tile/2, 250 - tile/2)
-        #self.home()
         self.speed(4)
         #-- game attributes
         self.items = board
@@ -236,13 +233,16 @@ def main():
     if board_width < board_height:
         maxdim = board_height
     tile = width / float(board_width)
-    print("tile: {}".format(tile))
     #-- game setup
     game = Game()
     game.print_items()
     game.draw_colors()
-    # game.draw_cover()
-    turtle.mainloop() #-- creates the main loop for turtle screen
+    while True:
+        user_input = input("Press any key to exit:")
+        if user_input:
+            exit()
+        turtle.mainloop() #-- creates the main loop for turtle screen
+
 
 if __name__ == "__main__":
     main()

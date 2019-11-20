@@ -13,6 +13,7 @@ flip = False
 board_width = 0
 board_height = 0
 board = []
+STAMP_SIZE = 20.0
 
 #-- screen setup 
 screen = turtle.Screen()
@@ -29,7 +30,7 @@ class Game(turtle.Turtle):
         self.penup()
         self.shape("square")
         # self.shapesize(4.8) 4.8 works for a 5x5 grid in 500x500 window
-        ss = 1 # width / (tile * 4) - 0.2
+        ss = tile / STAMP_SIZE # 1 # width / (tile * 4) - 0.2
         print("ss: {}".format(ss))
         self.shapesize(ss)
         self.setpos(-250 + tile/2, 250 - tile/2)

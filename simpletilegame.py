@@ -151,7 +151,6 @@ class Game(turtle.Turtle):
             self.forward(2 * minitile)
             self.left(90)
 
-
     #-- covers the tiles by stamping the gray color on them 
     def draw_cover(self):
         self.fillcolor("gray")

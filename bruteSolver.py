@@ -59,7 +59,10 @@ def rotate_piece(piece, times):
 def will_piece_fit(board, piece, loc_X, loc_Y):
     for x in range(len(piece)):
         for y in range(len(piece[0])):
-            print(piece[x][y], "?=", board[loc_X+x][loc_Y+y])
+            try:
+                print(piece[x][y], "?=", board[loc_X+x][loc_Y+y])
+            except IndexError:
+                return False
             if piece[x][y]!=board[loc_X+x][loc_Y+y] and piece[x][y]!=" ":
                 return False
     return True

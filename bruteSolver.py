@@ -305,10 +305,49 @@ def dfs_helper_with_rotation_and_flip(board, pieces, depth, currSolution, soluti
                             new_board = put_piece_in_place(new_board, currPiece, x, y)
                             new_curr_solution = currSolution+[[x,y,pieces[depth],0, flip]]
                             dfs_helper_with_rotation_and_flip(new_board, pieces, depth+1, new_curr_solution, solutions)
-         
+
+def merges_sides(l_arr, r_arr, l, m, r):
+    #l_arr = arr[l:m]
+    #r_arr = arr[m + 1:r]
+    arr = [0] * (len(l_arr) + len(r_arr))
+    i = 0; j = 0; k=l
+    while i < len(l_arr) and j < len(r_arr):
+        # judging size based on number of tiles in 2D array
+        print("len(l_arr)={}, len(r_arr)={}, len(arr)={}".format(len(l_arr), len(r_arr), len(arr)))
+        print("i={}, j={}, k={}".format(i, j, k))
+        if(len(l_arr[i]) * len(l_arr[i][0]) <= len(r_arr[j]) * len(r_arr[j][0])):
+            arr[k] = l_arr[i]
+            i += 1
+        else:
+            arr[k] = r_arr[j]
+            j += 1
+        k += 1
+    while i < len(l_arr):
+        arr[k] = l_arr[i]
+        i += 1; k += 1
+    while j < len(r_arr):
+        print("l_arr = {}, r_arr={}, arr={}".format(l_arr, r_arr, arr))
+        arr[k] = r_arr[j]
+        j += 1; k += 1
+    return arr
+
+def mergesort(arr, l, r):
+    if l < r:
+        m = int((l + r -1)/2)
+        l_arr = mergesort(arr, l, m)
+        r_arr = mergesort(arr, m+1, r)
+        arr = merges_sides(l_arr, r_arr, l, m, r)
+    return arr
+
+def order_pieces_by_size(myPieces):
+    myPieces = mergesort(myPieces, 0, len(myPieces))
+    return myPieces
+
 def main():
     myBoard, myPieces = parse_input_file(sys.argv[1])
-
+    sorted_pieces = order_pieces_by_size(myPieces)
+    print(sorted_pieces)
+    exit()
     # print_board(myBoard)
     # for piece in myPieces:
     #     print_piece(myPieces[piece])

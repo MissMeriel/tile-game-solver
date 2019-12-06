@@ -2,7 +2,7 @@ ZZZ
 ZZZ
  ZZ
 
-ZZ
+ZZ  
 ZZZZ
   ZZ
 
@@ -11,8 +11,8 @@ ZZZ
   Z
 ZZZ
 
-Z
-Z
+Z  
+Z  
 ZZZ
 ZZZ
 
@@ -20,7 +20,7 @@ ZZZ
 ZZZZ
   ZZ
 
-ZZZ
+ZZZ  
 ZZZZZ
 
   Z

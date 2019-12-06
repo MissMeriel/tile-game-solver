@@ -1,39 +1,19 @@
-X
-X
-
-XX 
- X 
- XX
-
-X   
-X   
-XXX 
- XXX
- XXX
-
-XXX
- XX
- XX
-
-XXX
-
-XXX 
-XXXX
-
-X 
-XX
-X 
-
   X
- XX
 XXX
+X  
 
-   XXX   
-   XXX   
-   XXX   
-XXXXXXXXX
-XXXXXXXXX
-XXXXXXXXX
-   XXX   
-   XXX   
-   XXX   
+XX
+XX
+
+XX
+ X
+ X
+
+XX
+
+X
+
+XXXX
+XXXX
+XXXX
+XXXX

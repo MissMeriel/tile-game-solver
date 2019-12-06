@@ -11,18 +11,15 @@ def parse_input_file(input_file):
     key_count = -1
     with open(input_file, 'r') as f:
         line = f.readline().strip('\n')
-        #print(line)
         while line:
             key_count += 1
             curr_fig = []
             while line != "":
                 curr_fig.append(list(line))
                 line = f.readline().strip('\n')
-            #print(curr_fig)
             line = f.readline().strip('\n')
             pieces[key_count] = curr_fig
         board = pieces.pop(key_count)
-        #print(board)
     f.close()
     return board, pieces
 
@@ -166,7 +163,6 @@ def has_necessary_num_pieces(board, num_spots_in_pieces):
 # sets are then returned
 def get_plausible_sets(board, pieces):
     piece_power_set = more_itertools.powerset(pieces)
-    
     plausibleSets=[]
     for aSet in piece_power_set:
         sum_of_set = {}
@@ -182,7 +178,7 @@ def get_plausible_sets(board, pieces):
             myIter = 0
             for item in aSet:
                 plausibleSet[myIter] = pieces[item]
-                myIter+=1
+                myIter += 1
             plausibleSets.append(plausibleSet)  
     return plausibleSets  
 
@@ -306,6 +302,9 @@ def dfs_helper_with_rotation_and_flip(board, pieces, depth, currSolution, soluti
                             new_curr_solution = currSolution+[[x,y,pieces[depth],0, flip]]
                             dfs_helper_with_rotation_and_flip(new_board, pieces, depth+1, new_curr_solution, solutions)
 
+def print_solutions(allSolutions):
+    for i in range(len(allSolutions[0])):
+        print("Solution {}: {}".format(i, allSolutions[0][i]))
 
 def order_pieces_by_size(myPieces):
     pieces = myPieces.values()
@@ -317,15 +316,20 @@ def order_pieces_by_size(myPieces):
     return myPieces
 
 def main():
+    ### Take in input file
     myBoard, myPieces = parse_input_file(sys.argv[1])
+
+    ### Order pieces by size
+    ### Placing largest pieces first constrains tree depth
     myPieces = order_pieces_by_size(myPieces)
     # print_board(myBoard)
     # for piece in myPieces:
     #     print_piece(myPieces[piece])
 
     # print(brute_force(myBoard, myPieces))
+    print("BOARD:")
     print_board(myBoard)
-    #print(myPieces)
+    print("PIECES:")
     for piece in myPieces:
         print_piece(myPieces[piece])
     #    print_piece(flip_piece(myPieces[piece]))
@@ -337,16 +341,16 @@ def main():
     if plausibleSets:
         for plausibleSet in plausibleSets:
             print(plausibleSet)
-            some_solutions = (dfs(myBoard, plausibleSet, 0))
-            if some_solutions!=[]:
+            some_solutions = (dfs(myBoard, plausibleSet, 3))
+            if some_solutions != []:
                 allSolutions.append(some_solutions)
     else:
         print("There are no plausible sets")
-    print(time.time()-start)
+    print("Seconds to solve: {}".format(time.time()-start))
 
     if allSolutions != []:
-        print(allSolutions)
-        print("There are",len(allSolutions[0]), "solutions.")
+        print_solutions(allSolutions)
+        print("There are", len(allSolutions[0]), "solutions.")
     else:
         print("There are no solutions!")
 

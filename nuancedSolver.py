@@ -215,9 +215,8 @@ def dfs_helper(board, pieces, depth, currSolution, solutions, available_spots):
     elif depth < len(pieces):
         nonvalid=False
         for piece in pieces:
-            print(is_spot_for_piece(board, pieces[piece]))
             if not is_spot_for_piece(board, pieces[piece]) and piece > depth:
-                print(nonvalid)
+                nonvalid = True
                 
 
         for spot in available_spots:
@@ -243,8 +242,12 @@ def dfs_helper_with_rotation(board, pieces, depth, currSolution, solutions, avai
     elif depth < len(pieces):
         nonvalid=False
         for piece in pieces:
-            if not is_spot_for_piece(board, pieces[piece]) and piece > depth:
-                nonvalid=True
+            no_solve = 0
+            for rotation in range(4):
+                if not is_spot_for_piece(board, rotate_piece(pieces[piece],rotation)) and piece > depth:
+                    no_solve+=1
+                nonvalid = (no_solve == 4)
+                
         for spot in available_spots:
             if nonvalid:
                 break
@@ -271,8 +274,9 @@ def dfs_helper_with_flip(board, pieces, depth, currSolution, solutions, availabl
     elif depth < len(pieces):
         nonvalid=False
         for piece in pieces:
-            if not is_spot_for_piece(board, pieces[piece]) and piece > depth:
+            if not is_spot_for_piece(board, pieces[piece]) and not is_spot_for_piece(board, flip_piece(pieces[piece])) and piece > depth:
                 nonvalid=True
+                
         for spot in available_spots:
             if nonvalid:
                 break
@@ -297,8 +301,12 @@ def dfs_helper_with_rotation_and_flip(board, pieces, depth, currSolution, soluti
     elif depth < len(pieces):
         nonvalid=False
         for piece in pieces:
-            if not is_spot_for_piece(board, pieces[piece]) and piece > depth:
-                nonvalid=True
+            no_solve = 0
+            for rotation in range(4):
+                if not is_spot_for_piece(board, pieces[piece]) and not is_spot_for_piece(board, flip_piece(pieces[piece])) and piece > depth:
+                    no_solve+=1
+                nonvalid = (no_solve == 4)
+
             if nonvalid:
                 break
             for spot in available_spots:
@@ -320,41 +328,13 @@ def dfs_helper_with_rotation_and_flip(board, pieces, depth, currSolution, soluti
                             new_available_spots.remove([spot[0],spot[1]])
                             dfs_helper_with_rotation_and_flip(new_board, pieces, depth+1, new_curr_solution, solutions, available_spots)
 
-def merges_sides(l_arr, r_arr, l, m, r):
-    #l_arr = arr[l:m]
-    #r_arr = arr[m + 1:r]
-    arr = [0] * (len(l_arr) + len(r_arr))
-    i = 0; j = 0; k=l
-    while i < len(l_arr) and j < len(r_arr):
-        # judging size based on number of tiles in 2D array
-        print("len(l_arr)={}, len(r_arr)={}, len(arr)={}".format(len(l_arr), len(r_arr), len(arr)))
-        print("i={}, j={}, k={}".format(i, j, k))
-        if(len(l_arr[i]) * len(l_arr[i][0]) <= len(r_arr[j]) * len(r_arr[j][0])):
-            arr[k] = l_arr[i]
-            i += 1
-        else:
-            arr[k] = r_arr[j]
-            j += 1
-        k += 1
-    while i < len(l_arr):
-        arr[k] = l_arr[i]
-        i += 1; k += 1
-    while j < len(r_arr):
-        print("l_arr = {}, r_arr={}, arr={}".format(l_arr, r_amyBoardrr, arr))
-        arr[k] = r_arr[j]
-        j += 1; k += 1
-    return arr
-
-def mergesort(arr, l, r):
-    if l < r:
-        m = int((l + r -1)/2)
-        l_arr = mergesort(arr, l, m)
-        r_arr = mergesort(arr, m+1, r)
-        arr = merges_sides(l_arr, r_arr, l, m, r)
-    return arr
-
 def order_pieces_by_size(myPieces):
-    myPieces = mergesort(myPieces, 0, len(myPieces))
+    pieces = myPieces.values()
+    pieces = sorted(pieces, key=lambda piece: len(piece) * len(piece[0]), reverse=True)
+    myPieces = dict()
+    for i in range(len(pieces)):
+        myPieces.update({i: pieces[i]})
+    #print("myPieces={}".format(myPieces))
     return myPieces
 
 def fill_board_with_solution(board, solution):
@@ -365,7 +345,7 @@ def fill_board_with_solution(board, solution):
             placed_piece = flip_piece(placed_piece)
         placed_piece = rotate_piece(placed_piece, piece[3])
         put_piece_in_place(board, placed_piece, piece[0], piece[1], chr(key))
-        print_board(board)
+        #print_board(board)
         key+=1
 
 def solutions_are_isomorphic(board1, board2):
@@ -377,7 +357,8 @@ def solutions_are_isomorphic(board1, board2):
             else:
                 if board1 == rotate_piece(board2, rotation):
                     return True
-    return False      
+    return False
+     
 
 def main():
     myBoard, myPieces = parse_input_file(sys.argv[1])
@@ -395,18 +376,20 @@ def main():
     plausibleSets = get_plausible_sets(myBoard, myPieces)
     print(len(plausibleSets))
 
+
     allSolutions = []
     start = time.time()
     if plausibleSets:
         for plausibleSet in plausibleSets:
             print(plausibleSet)
-            some_solutions = (dfs(myBoard, plausibleSet, 3))
+            some_solutions = (dfs(myBoard, plausibleSet, 2))
             if some_solutions!=[]:
                 allSolutions.append(some_solutions)
     else:
         print("There are no plausible sets")
     print(time.time()-start)
 
+    myPieces=order_pieces_by_size(myPieces)
     if allSolutions!=[]:
         print("There are",len(allSolutions[0]), "solutions.")
         solved_board = copy.deepcopy(myBoard)

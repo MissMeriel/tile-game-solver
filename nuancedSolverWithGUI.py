@@ -4,7 +4,7 @@ import copy
 import more_itertools
 import time
 import turtle, random, sys
-#import simpletilegame
+import simpletilegame
 
 progress_tracker = [] #-- keep track of how much of search space has been covered
 
@@ -399,6 +399,14 @@ def main():
         print_piece(myPieces[piece])
     #    print_piece(flip_piece(myPieces[piece]))
 
+    ### START GUI
+    simpletilegame.board = myBoard
+    game = simpletilegame.Game()
+    game.game_setup(myBoard)
+    game.print_items()
+    game.draw_board()
+    game.draw_pieces(myPieces)
+
     plausibleSets = get_plausible_sets(myBoard, myPieces)
     print(len(plausibleSets))
 
@@ -409,7 +417,7 @@ def main():
             print(plausibleSet)
             ### No solution found to trivial.txt with choice=2
             print("Commence depth-first search with {} plausible sets".format(len(plausibleSets)))
-            some_solutions = (dfs(myBoard, plausibleSet, 3))
+            some_solutions = (dfs(myBoard, plausibleSet, 0))
             if some_solutions != []:
                 allSolutions.append(some_solutions)
     else:
@@ -433,19 +441,12 @@ def main():
             if validSolution:
                 prunedSolutions.append(new_solution)
 
-        ### START GUI
-        # game = simpletilegame.Game()
-        # game.game_setup(myBoard)
-        # game.print_items()
-        # game.draw_board()
-        # game.draw_pieces(myPieces)
-
 
         print("There is/are", len(prunedSolutions), "non-isomorphic solutions.")
         for aSolution in prunedSolutions:
             print_board(aSolution)
             print("aSolution:{}".format(aSolution))
-            #game.draw_solution(aSolution)
+            game.draw_solution(aSolution)
 
     else:
         print("There are no solutions!")

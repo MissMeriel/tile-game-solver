@@ -181,6 +181,7 @@ def get_plausible_sets(board, pieces):
 # (I.E. includes rotations or flips of pieces)
 # It returns whatever solutions it finds
 def dfs(board, pieces, choice=3):
+    start = time.time()
     solutions = []
     available_spots = []
     for x in range(len(board)):
@@ -189,13 +190,14 @@ def dfs(board, pieces, choice=3):
                 available_spots.append([x,y])
             
     if choice == 0:
-        dfs_helper(board, pieces, 0, [], solutions, available_spots)
+        dfs_helper(board, pieces, 0, [], solutions, available_spots, start)
     elif choice == 1:
-        dfs_helper_with_rotation(board, pieces, 0, [], solutions, available_spots)
+        dfs_helper_with_rotation(board, pieces, 0, [], solutions, available_spots, start)
     elif choice == 2:
-        dfs_helper_with_flip(board, pieces, 0, [], solutions, available_spots)
+        dfs_helper_with_flip(board, pieces, 0, [], solutions, available_spots, start)
     elif choice == 3:
-        dfs_helper_with_rotation_and_flip(board, pieces, 0, [], solutions, available_spots)
+        dfs_helper_with_rotation_and_flip(board, pieces, 0, [], solutions, available_spots, start)
+    print("Time to search all solutions:", time.time()-start)
     return solutions
 
 # Base DFS helper. It takes in a board, a set of pieces, the depth in the DFS
@@ -207,10 +209,12 @@ def dfs(board, pieces, choice=3):
 # the next piece. If it will fit at that spot, it places it in a copy of the board, adds
 # to the current solution, and finally calls itself with the new board, the pieces, a depth
 # one higher, the newly made current solution, and the solution set.
-def dfs_helper(board, pieces, depth, currSolution, solutions, available_spots):
+def dfs_helper(board, pieces, depth, currSolution, solutions, available_spots, start):
     #print(is_board_full(board))
     if is_board_full(board):
         solutions.append(currSolution)
+        if len(solutions) == 1:
+            print("Time to find one solution:", time.time()-start)
 
     elif depth < len(pieces):
         nonvalid=False
@@ -229,12 +233,12 @@ def dfs_helper(board, pieces, depth, currSolution, solutions, available_spots):
                 new_curr_solution = currSolution+[[spot[0],spot[1],pieces[depth],0,0]]
                 new_available_spots = copy.deepcopy(available_spots)
                 new_available_spots.remove([spot[0],spot[1]])
-                dfs_helper(new_board, pieces, depth+1, new_curr_solution, solutions, new_available_spots)
+                dfs_helper(new_board, pieces, depth+1, new_curr_solution, solutions, new_available_spots, start)
 
 # DFS helper that includes piece rotations. This is very similar to the base helper.
 # It now also attempts to place a piece in a board after rotating it 0, 90, 180, and 270
 # degrees.  
-def dfs_helper_with_rotation(board, pieces, depth, currSolution, solutions, available_spots):
+def dfs_helper_with_rotation(board, pieces, depth, currSolution, solutions, available_spots, start):
     #print("new search started")
     if is_board_full(board):
         solutions.append(currSolution) 
@@ -259,14 +263,14 @@ def dfs_helper_with_rotation(board, pieces, depth, currSolution, solutions, avai
                     new_curr_solution = currSolution+[[spot[0],spot[1],pieces[depth],rotation,0]]
                     new_available_spots = copy.deepcopy(available_spots)
                     new_available_spots.remove([spot[0],spot[1]])
-                    dfs_helper_with_rotation(new_board, pieces, depth+1, new_curr_solution, solutions, new_available_spots)
+                    dfs_helper_with_rotation(new_board, pieces, depth+1, new_curr_solution, solutions, new_available_spots, start)
 
 # DFS helper that includes piece flips. This is very similar to the base helper.
 # It now also attempts to place a piece in a board after flipping it. So a piece
 # X                             XX
 # X   would be flipped to be    X
 # XX                            X
-def dfs_helper_with_flip(board, pieces, depth, currSolution, solutions, available_spots):
+def dfs_helper_with_flip(board, pieces, depth, currSolution, solutions, available_spots, start):
     #print(is_board_full(board))
     if is_board_full(board):
         solutions.append(currSolution) 
@@ -291,10 +295,10 @@ def dfs_helper_with_flip(board, pieces, depth, currSolution, solutions, availabl
                     new_curr_solution = currSolution+[[spot[0],spot[1],pieces[depth],0, flip]]
                     new_available_spots = copy.deepcopy(available_spots)
                     new_available_spots.remove([spot[0],spot[1]])
-                    dfs_helper_with_flip(new_board, pieces, depth+1, new_curr_solution, solutions, new_available_spots)
+                    dfs_helper_with_flip(new_board, pieces, depth+1, new_curr_solution, solutions, new_available_spots, start)
 
 # This DFS helper combines the previous two by allowing both flips and rotations.
-def dfs_helper_with_rotation_and_flip(board, pieces, depth, currSolution, solutions, available_spots):
+def dfs_helper_with_rotation_and_flip(board, pieces, depth, currSolution, solutions, available_spots, start):
     #print(is_board_full(board))
     if is_board_full(board):
         solutions.append(currSolution) 
@@ -326,7 +330,7 @@ def dfs_helper_with_rotation_and_flip(board, pieces, depth, currSolution, soluti
                             new_curr_solution = currSolution+[[spot[0],spot[1],pieces[depth],rotation, flip]]
                             new_available_spots = copy.deepcopy(available_spots)
                             new_available_spots.remove([spot[0],spot[1]])
-                            dfs_helper_with_rotation_and_flip(new_board, pieces, depth+1, new_curr_solution, solutions, available_spots)
+                            dfs_helper_with_rotation_and_flip(new_board, pieces, depth+1, new_curr_solution, solutions, available_spots, start)
 
 def order_pieces_by_size(myPieces):
     pieces = myPieces.values()
@@ -379,11 +383,13 @@ def main():
 
     allSolutions = []
     start = time.time()
+    counter=0
     if plausibleSets:
         for plausibleSet in plausibleSets:
-            print(plausibleSet)
+            print(counter)
+            counter+=1
             ### No solution found to trivial.txt with choice=2
-            some_solutions = (dfs(myBoard, plausibleSet, 3))
+            some_solutions = (dfs(myBoard, plausibleSet, 0))
             if some_solutions!=[]:
                 allSolutions.append(some_solutions)
     else:
@@ -392,7 +398,7 @@ def main():
 
     myPieces=order_pieces_by_size(myPieces)
     if allSolutions!=[]:
-        print("There are", len(allSolutions[0]), "solutions.")
+        print("There is/are", len(allSolutions[0]), "solution(s).")
         solved_board = copy.deepcopy(myBoard)
         fill_board_with_solution(solved_board, allSolutions[0][0])
         prunedSolutions = [solved_board]
@@ -407,7 +413,7 @@ def main():
             if validSolution:
                 prunedSolutions.append(new_solution)
 
-        print("There is/are", len(prunedSolutions), "non-isomorphic solutions.")
+        print("There is/are", len(prunedSolutions), "non-isomorphic solution(s).")
         for aSolution in prunedSolutions:
             print_board(aSolution)
     else:

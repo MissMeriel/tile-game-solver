@@ -9,7 +9,7 @@ import sys
 tile = 100 # orig 100
 window_width = 1000
 width = 500
-height = 500
+height = 800
 flip = False
 board_width = 0
 board_height = 0
@@ -25,6 +25,9 @@ screen.tracer(1)
 #-- class Game holding graphic attribs and game attribs
 class Game(turtle.Turtle):
     def __init__(self):
+        global board_height, board_width, board, tile, width
+        board_width = len(board[0])
+        board_height = len(board)
         #-- module attributes
         turtle.Turtle.__init__(self)
         self.hideturtle()
@@ -43,10 +46,10 @@ class Game(turtle.Turtle):
         self.temp_coordinates = []
         self.count = 0
         self.correct = 0
-        self.piece_grid = [] #-- to find the location of pieces
+        self.piece_grid = dict() #-- to find the location of pieces
 
     def game_setup(self, _board):
-        global board_height, board_width, board
+        global board_height, board_width, board, tile, width
         board = _board
         board_width = len(board[0])
         board_height = len(board)
@@ -125,31 +128,34 @@ class Game(turtle.Turtle):
         #self.resizemode("user")
         #self.shapesize(3, 3, outline=10)
         if marker == "a":
-            #self.fillcolor("pink")
             self.pencolor("pink")
         elif marker == "b":
-            #self.fillcolor("lightblue")
             self.pencolor("red")
         elif marker == "c":
-            #self.fillcolor("gold")
-            self.pencolor("light green")
+            self.pencolor("gold")
         elif marker == "d":
-            self.fillcolor("white")
+            self.pencolor("white")
         elif marker == "e":
-            self.fillcolor("blue")
-        elif marker == "%":
-            self.fillcolor("orange")
-        elif marker == "#":
-            self.fillcolor("red")
-        elif marker == "X":
-            self.fillcolor("green")
-        elif marker == "O":
-            self.fillcolor("yellow")
+            self.pencolor("blue")
+        elif marker == "f":
+            self.pencolor("orange")
         elif marker == "g":
-            self.fillcolor("light green")
+            self.pencolor("cyan")
+        elif marker == "h":
+            self.pencolor("green")
+        elif marker == "i":
+            self.pencolor("yellow")
+        elif marker == "j":
+            self.pencolor("light green")
+        elif marker == "k":
+            self.pencolor("lightblue")
+        elif marker == "l":
+            self.pencolor("turquoise")
 
     #-- draw the graphical board according to input
     def draw_board(self):
+        ss = tile / STAMP_SIZE
+        self.shapesize(ss)
         spacer = tile+4
         for r in range(len(self.items)):
             for c in range(len(self.items[0])):
@@ -171,12 +177,15 @@ class Game(turtle.Turtle):
     def draw_pieces(self, pieces):
         # get max height of pieces
         max_height = get_max_height(pieces)
-        self.setpos(0 + tile/2, 250 - tile/2)
+        width_offset = self.grid[0][-1]
+        #self.setpos(0 + tile/2, width_offset - tile/2)
+        self.setpos(0 + tile*1.5, width_offset - tile / 2)
         self.shapesize(1)
         minitile=10
         ss = minitile / STAMP_SIZE
         self.shapesize(ss)
         for key in pieces:
+            #self.piece_grid.update({key, []})
             p = pieces[key]
             print(p)
             for r in range(len(p)):
@@ -186,14 +195,14 @@ class Game(turtle.Turtle):
                     self.stamp()
                     int(self.xcor())
                     int(self.ycor())
-                    self.grid.append((self.xcor(), self.ycor()))  # -- keep a track of position of each tile
+                    #self.piece_grid[key].append((self.xcor(), self.ycor()))  # -- keep track of position of each tile
                     self.forward(minitile)
                 self.back(minitile * len(p[0]))
                 self.right(90)
                 self.forward(minitile)
                 self.left(90)
             curr_pos = self.pos()
-            if (self.ycor() < 0 and abs(self.ycor())+ minitile * max_height > height / 2.0):
+            if (self.ycor() < 0 and abs(self.ycor())+ minitile * max_height > self.grid[0][-1]):
                 self.setx(self.xcor() + minitile * max_height)
                 self.sety(250 - tile/2)
                 print("RESET Y")

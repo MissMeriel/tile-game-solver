@@ -4,8 +4,9 @@ import copy
 import more_itertools
 import time
 import turtle, random, sys
-import simpletilegame
+#import simpletilegame
 
+progress_tracker = [] #-- keep track of how much of search space has been covered
 
 # Shamlessly taken from simpletilegame.py
 def parse_input_file(input_file):
@@ -204,7 +205,6 @@ def dfs(board, pieces, choice=3):
         for y in range(len(board[x])):
             if board[x][y] != " ":
                 available_spots.append([x, y])
-
     if choice == 0:
         dfs_helper(board, pieces, 0, [], solutions, available_spots)
     elif choice == 1:
@@ -229,13 +229,11 @@ def dfs_helper(board, pieces, depth, currSolution, solutions, available_spots):
     # print(is_board_full(board))
     if is_board_full(board):
         solutions.append(currSolution)
-
     elif depth < len(pieces):
         nonvalid = False
         for piece in pieces:
             if not is_spot_for_piece(board, pieces[piece]) and piece > depth:
                 nonvalid = True
-
         for spot in available_spots:
             if nonvalid:
                 break
@@ -410,6 +408,7 @@ def main():
         for plausibleSet in plausibleSets:
             print(plausibleSet)
             ### No solution found to trivial.txt with choice=2
+            print("Commence depth-first search with {} plausible sets".format(len(plausibleSets)))
             some_solutions = (dfs(myBoard, plausibleSet, 3))
             if some_solutions != []:
                 allSolutions.append(some_solutions)
@@ -435,18 +434,18 @@ def main():
                 prunedSolutions.append(new_solution)
 
         ### START GUI
-        game = simpletilegame.Game()
-        game.game_setup(myBoard)
-        game.print_items()
-        game.draw_board()
-        game.draw_pieces(myPieces)
+        # game = simpletilegame.Game()
+        # game.game_setup(myBoard)
+        # game.print_items()
+        # game.draw_board()
+        # game.draw_pieces(myPieces)
 
 
         print("There is/are", len(prunedSolutions), "non-isomorphic solutions.")
         for aSolution in prunedSolutions:
             print_board(aSolution)
             print("aSolution:{}".format(aSolution))
-            game.draw_solution(aSolution)
+            #game.draw_solution(aSolution)
 
     else:
         print("There are no solutions!")

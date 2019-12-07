@@ -43,6 +43,7 @@ class Game(turtle.Turtle):
         self.temp_coordinates = []
         self.count = 0
         self.correct = 0
+        self.piece_grid = [] #-- to find the location of pieces
 
     def game_setup(self, _board):
         global board_height, board_width, board

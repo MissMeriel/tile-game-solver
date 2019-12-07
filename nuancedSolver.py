@@ -1,5 +1,4 @@
 import sys
-import random
 import copy
 import more_itertools
 import time
@@ -180,7 +179,7 @@ def get_plausible_sets(board, pieces):
 # This is the function that calls the correct type of depth first search
 # (I.E. includes rotations or flips of pieces)
 # It returns whatever solutions it finds
-def dfs(board, pieces, choice=3):
+def dfs(board, pieces, choice):
     start = time.time()
     solutions = []
     available_spots = []
@@ -221,8 +220,6 @@ def dfs_helper(board, pieces, depth, currSolution, solutions, available_spots, s
         for piece in pieces:
             if not is_spot_for_piece(board, pieces[piece]) and piece > depth:
                 nonvalid = True
-                
-
         for spot in available_spots:
             if nonvalid:
                 break
@@ -232,7 +229,7 @@ def dfs_helper(board, pieces, depth, currSolution, solutions, available_spots, s
                 new_board = put_piece_in_place(new_board, currPiece, spot[0], spot[1], " ")
                 new_curr_solution = currSolution+[[spot[0],spot[1],pieces[depth],0,0]]
                 new_available_spots = copy.deepcopy(available_spots)
-                new_available_spots.remove([spot[0],spot[1]])
+                # new_available_spots.remove([spot[0],spot[1]])
                 dfs_helper(new_board, pieces, depth+1, new_curr_solution, solutions, new_available_spots, start)
 
 # DFS helper that includes piece rotations. This is very similar to the base helper.
@@ -371,23 +368,23 @@ def main():
     #     print_piece(myPieces[piece])
 
     # print(brute_force(myBoard, myPieces))
-    print_board(myBoard)
+    #print_board(myBoard)
     #print(myPieces)
-    for piece in myPieces:
-        print_piece(myPieces[piece])
+    #for piece in myPieces:
+    #    print_piece(myPieces[piece])
     #    print_piece(flip_piece(myPieces[piece]))
 
     plausibleSets = get_plausible_sets(myBoard, myPieces)
-    print(len(plausibleSets))
+    #print(len(plausibleSets))
 
 
     allSolutions = []
     start = time.time()
-    counter=0
+    #counter=0
     if plausibleSets:
         for plausibleSet in plausibleSets:
-            print(counter)
-            counter+=1
+            #print(counter)
+            #counter+=1
             ### No solution found to trivial.txt with choice=2
             some_solutions = (dfs(myBoard, plausibleSet, 0))
             if some_solutions!=[]:

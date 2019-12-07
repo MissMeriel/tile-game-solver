@@ -6,7 +6,7 @@ import turtle, random, time
 import sys
 
 #-- constants 
-tile = 100
+tile = 100 # orig 100
 window_width = 1000
 width = 500
 height = 500
@@ -32,8 +32,10 @@ class Game(turtle.Turtle):
         self.shape("square")
         ss = tile / STAMP_SIZE
         self.shapesize(ss)
-        self.setpos(-250 -250 + tile/2, 250 - tile/2)
-        self.speed(4)
+        #self.setpos(-250 -250 + tile/2, 250 - tile/2)
+        self.setpos(-250 - 245 + tile / 2, 245 - tile / 2)
+        # fastest=10, slowest=1
+        self.speed(5)
         #-- game attributes
         self.items = board
         self.grid = [] #-- to find the position of each tile
@@ -115,7 +117,12 @@ class Game(turtle.Turtle):
             self.fillcolor("black")
 
     def get_outline_color(self, marker):
-        turtle.shapesize(outline=10)
+        #if self.filling():
+        #    self.pensize(3)
+        self.shapesize(outline=5)
+        #self.pensize(5)
+        #self.resizemode("user")
+        #self.shapesize(3, 3, outline=10)
         if marker == "a":
             #self.fillcolor("pink")
             self.pencolor("pink")
@@ -124,7 +131,7 @@ class Game(turtle.Turtle):
             self.pencolor("red")
         elif marker == "c":
             #self.fillcolor("gold")
-            self.pencolor("green")
+            self.pencolor("light green")
         elif marker == "d":
             self.fillcolor("white")
         elif marker == "e":
@@ -142,17 +149,22 @@ class Game(turtle.Turtle):
 
     #-- draw the graphical board according to input
     def draw_board(self):
+        spacer = tile+4
         for r in range(len(self.items)):
             for c in range(len(self.items[0])):
                 self.get_color(r, c)
                 self.stamp()
                 int(self.xcor())
                 int(self.ycor())
+                ### TODO: CHANGE TO 2D ARRAY
                 self.grid.append((self.xcor(), self.ycor()))#-- keep a track of position of each tile
-                self.forward(tile)
-            self.back(tile * board_width)
+                #self.forward(tile)
+                self.forward(spacer)
+            #self.back(tile * board_width)
+            self.back(spacer * board_width)
             self.right(90)
-            self.forward(tile)
+            #self.forward(tile)
+            self.forward(spacer)
             self.left(90)
 
     def draw_pieces(self, pieces):
@@ -250,7 +262,7 @@ class Game(turtle.Turtle):
         print("in draw_solution()")
         print("solution={}".format(solution))
         marker_set = set()
-        self.shapesize(tile / STAMP_SIZE)
+        self.shapesize((tile / STAMP_SIZE))
         for row in range(len(solution)):
             print("row={}".format(row))
             for col in range(len(solution[row])):
@@ -266,8 +278,6 @@ class Game(turtle.Turtle):
                 self.get_color2(board[row][col])
                 self.setpos(tile_coords)
                 self.stamp()
-
-
 
     #-- metod to select the first tile
     #-- keeps  a track of temporary coordinates, and selected item
@@ -366,7 +376,7 @@ def main():
     game = Game()
     game.game_setup(board)
     game.print_items()
-    game.draw_colors()
+    game.draw_board()
     game.draw_pieces(pieces)
     while True:
         user_input = input("Press any key to exit:")

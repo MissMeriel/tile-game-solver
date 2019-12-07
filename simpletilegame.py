@@ -40,7 +40,21 @@ class Game(turtle.Turtle):
         self.temp_selected = []
         self.temp_coordinates = []
         self.count = 0
-        self.correct = 0 
+        self.correct = 0
+
+    def game_setup(self, _board):
+        global board_height, board_width, board
+        board = _board
+        board_width = len(board[0])
+        board_height = len(board)
+        print("board size: {},{}".format(board_height, board_width))
+        maxdim = board_width
+        if board_width < board_height:
+            maxdim = board_height
+        tile = width / float(board_width)
+        print(board_width)
+        print(board_height)
+        self.items = board
 
     #-- print the board to stdout
     def print_items(self):
@@ -100,11 +114,37 @@ class Game(turtle.Turtle):
         elif marker == " ":
             self.fillcolor("black")
 
+    def get_outline_color(self, marker):
+        turtle.shapesize(outline=10)
+        if marker == "a":
+            #self.fillcolor("pink")
+            self.pencolor("pink")
+        elif marker == "b":
+            #self.fillcolor("lightblue")
+            self.pencolor("red")
+        elif marker == "c":
+            #self.fillcolor("gold")
+            self.pencolor("green")
+        elif marker == "d":
+            self.fillcolor("white")
+        elif marker == "e":
+            self.fillcolor("blue")
+        elif marker == "%":
+            self.fillcolor("orange")
+        elif marker == "#":
+            self.fillcolor("red")
+        elif marker == "X":
+            self.fillcolor("green")
+        elif marker == "O":
+            self.fillcolor("yellow")
+        elif marker == "g":
+            self.fillcolor("light green")
+
     #-- draw the graphical board according to input
-    def draw_colors(self):
+    def draw_board(self):
         for r in range(len(self.items)):
             for c in range(len(self.items[0])):
-                self.get_color(r,c)
+                self.get_color(r, c)
                 self.stamp()
                 int(self.xcor())
                 int(self.ycor())
@@ -140,9 +180,6 @@ class Game(turtle.Turtle):
                 self.forward(minitile)
                 self.left(90)
             curr_pos = self.pos()
-            #if(abs(self.xcor()) > width/2.0):
-            #    self.setx(0 + tile/2)
-            #    print("RESET X")
             if (self.ycor() < 0 and abs(self.ycor())+ minitile * max_height > height / 2.0):
                 self.setx(self.xcor() + minitile * max_height)
                 self.sety(250 - tile/2)
@@ -164,6 +201,7 @@ class Game(turtle.Turtle):
             self.forward(tile)
             self.left(90)
         self.reset_first_click()
+
     #-- acording to grid list we can locate the exact position of each tile
     def get_coordinate(self, r,c):
         if (r,c) == (0,0):
@@ -206,6 +244,31 @@ class Game(turtle.Turtle):
             return self.grid[18]
         elif (r,c) == (4,3):
             return self.grid[19]
+
+    def draw_solution(self, solution):
+        global board_width, board_height, tile
+        print("in draw_solution()")
+        print("solution={}".format(solution))
+        marker_set = set()
+        self.shapesize(tile / STAMP_SIZE)
+        for row in range(len(solution)):
+            print("row={}".format(row))
+            for col in range(len(solution[row])):
+                marker = solution[row][col]
+                grid_number = row * board_width + col
+                tile_coords = self.grid[grid_number]
+                print("tile={}".format(tile))
+                self.get_outline_color(marker)
+                print("grid_number={} marker={}".format(grid_number, marker))
+                print("board={}".format(board))
+                print("board[row]={}".format(board[row]))
+                print("board[row][col]={}".format(board[row][col]))
+                self.get_color2(board[row][col])
+                self.setpos(tile_coords)
+                self.stamp()
+
+
+
     #-- metod to select the first tile
     #-- keeps  a track of temporary coordinates, and selected item
     def first(self, x,y):
@@ -299,12 +362,9 @@ def main():
     board_width = len(board[0])
     board_height = len(board)
     print("board size: {},{}".format(board_height, board_width))
-    maxdim = board_width
-    if board_width < board_height:
-        maxdim = board_height
-    tile = width / float(board_width)
     #-- game setup
     game = Game()
+    game.game_setup(board)
     game.print_items()
     game.draw_colors()
     game.draw_pieces(pieces)

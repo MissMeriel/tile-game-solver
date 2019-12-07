@@ -180,7 +180,7 @@ def get_plausible_sets(board, pieces):
 # This is the function that calls the correct type of depth first search
 # (I.E. includes rotations or flips of pieces)
 # It returns whatever solutions it finds
-def dfs(board, pieces, choice):
+def dfs(board, pieces, choice=3):
     solutions = []
     available_spots = []
     for x in range(len(board)):
@@ -382,7 +382,8 @@ def main():
     if plausibleSets:
         for plausibleSet in plausibleSets:
             print(plausibleSet)
-            some_solutions = (dfs(myBoard, plausibleSet, 2))
+            ### No solution found to trivial.txt with choice=2
+            some_solutions = (dfs(myBoard, plausibleSet, 3))
             if some_solutions!=[]:
                 allSolutions.append(some_solutions)
     else:
@@ -391,7 +392,7 @@ def main():
 
     myPieces=order_pieces_by_size(myPieces)
     if allSolutions!=[]:
-        print("There are",len(allSolutions[0]), "solutions.")
+        print("There are", len(allSolutions[0]), "solutions.")
         solved_board = copy.deepcopy(myBoard)
         fill_board_with_solution(solved_board, allSolutions[0][0])
         prunedSolutions = [solved_board]

@@ -53,13 +53,13 @@ class Game(turtle.Turtle):
         board = _board
         board_width = len(board[0])
         board_height = len(board)
-        print("board size: {},{}".format(board_height, board_width))
+        #print("board size: {},{}".format(board_height, board_width))
         maxdim = board_width
         if board_width < board_height:
             maxdim = board_height
         tile = width / float(board_width)
-        print(board_width)
-        print(board_height)
+        #print(board_width)
+        #print(board_height)
         self.items = board
 
     #-- print the board to stdout
@@ -151,6 +151,7 @@ class Game(turtle.Turtle):
     def draw_board(self):
         ss = tile / STAMP_SIZE
         self.shapesize(ss)
+        self.setpos(-250 - 245 + tile / 2, 245 - tile / 2)
         spacer = tile+4
         for r in range(len(self.items)):
             for c in range(len(self.items[0])):
@@ -174,7 +175,7 @@ class Game(turtle.Turtle):
         max_height = get_max_height(pieces)
         width_offset = self.grid[0][-1]
         #self.setpos(0 + tile/2, width_offset - tile/2)
-        self.setpos(55 + tile*3, width_offset - tile / 2)
+        self.setpos(75 + tile*1, width_offset - tile / 2)
         self.shapesize(1)
         minitile=10
         ss = minitile / STAMP_SIZE
@@ -182,7 +183,7 @@ class Game(turtle.Turtle):
         for key in pieces:
             #self.piece_grid.update({key, []})
             p = pieces[key]
-            print(p)
+            #print(p)
             for r in range(len(p)):
                 for c in range(len(p[0])):
                     #print("marker:{} r:{} c:{}".format(p[r][c], r, c))
@@ -200,7 +201,7 @@ class Game(turtle.Turtle):
             if (self.ycor() < 0 and abs(self.ycor())+ minitile * max_height > self.grid[0][-1]):
                 self.setx(self.xcor() + minitile * max_height)
                 self.sety(250 - tile/2)
-                print("RESET Y")
+                #print("RESET Y")
             self.right(90)
             self.forward(2 * minitile)
             self.left(90)
@@ -264,25 +265,27 @@ class Game(turtle.Turtle):
 
     def draw_solution(self, solution):
         global board_width, board_height, tile
-        print("in draw_solution()")
-        print("solution={}".format(solution))
+        #print("in draw_solution()")
+        #print("solution={}".format(solution))
         marker_set = set()
         self.shapesize((tile / STAMP_SIZE))
         for row in range(len(solution)):
-            print("row={}".format(row))
+            #print("row={}".format(row))
             for col in range(len(solution[row])):
                 marker = solution[row][col]
                 grid_number = row * board_width + col
                 tile_coords = self.grid[grid_number]
-                print("tile={}".format(tile))
+                #print("tile={}".format(tile))
                 self.get_outline_color(marker)
-                print("grid_number={} marker={}".format(grid_number, marker))
-                print("board={}".format(board))
-                print("board[row]={}".format(board[row]))
-                print("board[row][col]={}".format(board[row][col]))
+                #print("grid_number={} marker={}".format(grid_number, marker))
+                #print("board={}".format(board))
+                #print("board[row]={}".format(board[row]))
+                #print("board[row][col]={}".format(board[row][col]))
                 self.get_color2(board[row][col])
                 self.setpos(tile_coords)
                 self.stamp()
+        time.sleep(2)
+
 
     #-- metod to select the first tile
     #-- keeps  a track of temporary coordinates, and selected item

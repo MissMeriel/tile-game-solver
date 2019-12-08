@@ -1,17 +1,18 @@
-aa
-a 
-a 
+  a
+aaa
 
-aa
-a 
-a 
+aaa
+a  
 
 bb
 bb
 
-oo
+o
+o
 
-oo
+o
+
+o
 
 oaaa
 obba

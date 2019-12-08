@@ -389,6 +389,20 @@ def solutions_are_isomorphic(board1, board2):
 def main():
     myBoard, myPieces = parse_input_file(sys.argv[1])
 
+    option = 0
+    try:
+        option_arg = sys.argv[2]
+        if(option_arg == 'none'):
+            option = 0
+        elif(option_arg == 'rotate'):
+            option = 1
+        elif(option_arg == 'flip'):
+            option = 2
+        elif(option_arg == 'both'):
+            option = 3
+    except:
+        option = 0
+
     print_board(myBoard)
     for piece in myPieces:
         print_piece(myPieces[piece])
@@ -411,7 +425,7 @@ def main():
             print(plausibleSet)
             ### No solution found to trivial.txt with choice=2
             print("Commence depth-first search with {} plausible sets".format(len(plausibleSets)))
-            some_solutions = (dfs(myBoard, plausibleSet, 0))
+            some_solutions = (dfs(myBoard, plausibleSet, option))
             if some_solutions != []:
                 allSolutions.append(some_solutions)
     else:
@@ -435,15 +449,18 @@ def main():
             if validSolution:
                 prunedSolutions.append(new_solution)
 
-        print("There is/are", len(prunedSolutions), "non-isomorphic solutions.")
+        print("There is/are", len(prunedSolutions), "non-isomorphic solutions:")
         for aSolution in prunedSolutions:
             print_board(aSolution)
-            print("aSolution:{}".format(aSolution))
+            #print("aSolution:{}".format(aSolution))
             game.draw_solution(aSolution)
+
 
     else:
         print("There are no solutions!")
 
     turtle.mainloop()  # -- creates the main loop for turtle screen
+    time.sleep(3)
+    exit()
 
 main()

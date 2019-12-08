@@ -38,7 +38,7 @@ class Game(turtle.Turtle):
         #self.setpos(-250 -250 + tile/2, 250 - tile/2)
         self.setpos(-250 - 245 + tile / 2, 245 - tile / 2)
         # fastest=10, slowest=1
-        self.speed(5)
+        self.speed(8)
         #-- game attributes
         self.items = board
         self.grid = [] #-- to find the position of each tile
@@ -121,34 +121,29 @@ class Game(turtle.Turtle):
             self.fillcolor("black")
 
     def get_outline_color(self, marker):
-        #if self.filling():
-        #    self.pensize(3)
         self.shapesize(outline=5)
-        #self.pensize(5)
-        #self.resizemode("user")
-        #self.shapesize(3, 3, outline=10)
         if marker == "a":
             self.pencolor("pink")
         elif marker == "b":
-            self.pencolor("red")
+            self.pencolor("magenta")
         elif marker == "c":
             self.pencolor("gold")
         elif marker == "d":
-            self.pencolor("white")
+            self.pencolor("brown")
         elif marker == "e":
-            self.pencolor("blue")
+            self.pencolor("violet")
         elif marker == "f":
-            self.pencolor("orange")
+            self.pencolor("lightblue")
         elif marker == "g":
-            self.pencolor("cyan")
+            self.pencolor("gray")
         elif marker == "h":
-            self.pencolor("green")
+            self.pencolor("darkgreen")
         elif marker == "i":
-            self.pencolor("yellow")
+            self.pencolor("maroon")
         elif marker == "j":
             self.pencolor("light green")
         elif marker == "k":
-            self.pencolor("lightblue")
+            self.pencolor("chocolate")
         elif marker == "l":
             self.pencolor("turquoise")
 
@@ -179,7 +174,7 @@ class Game(turtle.Turtle):
         max_height = get_max_height(pieces)
         width_offset = self.grid[0][-1]
         #self.setpos(0 + tile/2, width_offset - tile/2)
-        self.setpos(0 + tile*1.5, width_offset - tile / 2)
+        self.setpos(55 + tile*3, width_offset - tile / 2)
         self.shapesize(1)
         minitile=10
         ss = minitile / STAMP_SIZE

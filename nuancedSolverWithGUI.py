@@ -388,16 +388,10 @@ def solutions_are_isomorphic(board1, board2):
 
 def main():
     myBoard, myPieces = parse_input_file(sys.argv[1])
-    # print_board(myBoard)
-    # for piece in myPieces:
-    #     print_piece(myPieces[piece])
 
-    # print(brute_force(myBoard, myPieces))
     print_board(myBoard)
-    # print(myPieces)
     for piece in myPieces:
         print_piece(myPieces[piece])
-    #    print_piece(flip_piece(myPieces[piece]))
 
     ### START GUI
     simpletilegame.board = myBoard
@@ -440,7 +434,6 @@ def main():
                     break
             if validSolution:
                 prunedSolutions.append(new_solution)
-
 
         print("There is/are", len(prunedSolutions), "non-isomorphic solutions.")
         for aSolution in prunedSolutions:

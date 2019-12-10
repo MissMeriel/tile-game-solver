@@ -415,6 +415,8 @@ def main():
     game.draw_board()
     game.draw_pieces(myPieces)
 
+    myPieces = order_pieces_by_size(myPieces)
+
     plausibleSets = get_plausible_sets(myBoard, myPieces)
     print(len(plausibleSets))
 
@@ -432,7 +434,6 @@ def main():
         print("There are no plausible sets")
     print(time.time() - start)
 
-    myPieces = order_pieces_by_size(myPieces)
     if allSolutions != []:
         print("There are", len(allSolutions[0]), "solutions.")
         solved_board = copy.deepcopy(myBoard)
@@ -448,7 +449,7 @@ def main():
                     break
             if validSolution:
                 prunedSolutions.append(new_solution)
-
+        time.sleep(10)
         print("There is/are", len(prunedSolutions), "non-isomorphic solutions:")
         for aSolution in prunedSolutions:
             print_board(aSolution)

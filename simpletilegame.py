@@ -68,7 +68,38 @@ class Game(turtle.Turtle):
             print()
 
     #-- map colors to representation in input file
+<<<<<<< HEAD
+    def get_color(self, r,c):
+        if self.items[r][c] == "a":
+            self.fillcolor("white")
+        elif self.items[r][c] == "b":
+            self.fillcolor("blue")
+        elif self.items[r][c] == "%":
+            self.fillcolor("orange")
+        elif self.items[r][c] == "#":
+            self.fillcolor("red")
+        elif self.items[r][c] == "X":
+            self.fillcolor("green")
+        elif self.items[r][c] == "O":
+            self.fillcolor("yellow")
+        elif self.items[r][c] == "g":
+            self.fillcolor("light green")
+        elif self.items[r][c] == "h":
+            self.fillcolor("pink")
+        elif self.items[r][c] == "s":
+            self.fillcolor("lightblue")
+        elif self.items[r][c] == "o":
+            self.fillcolor("gold")
+        elif self.items[r][c] == " ":
+            self.fillcolor("black")
+        elif self.items[r][c] == " ":
+            self.fillcolor("gold")
+
+    #-- map colors to representation in input file
+    def get_color2(self, marker):
+=======
     def get_color(self, marker):
+>>>>>>> a3474920a53ef3a82cca49c739198ef26d086b65
         if marker == "a":
             self.fillcolor("white")
         elif marker == "b":

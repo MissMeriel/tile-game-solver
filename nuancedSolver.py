@@ -386,7 +386,7 @@ def main():
             #print(counter)
             #counter+=1
             ### No solution found to trivial.txt with choice=2
-            some_solutions = (dfs(myBoard, plausibleSet, 0))
+            some_solutions = (dfs(myBoard, plausibleSet, 3))
             if some_solutions!=[]:
                 allSolutions.append(some_solutions)
     else:

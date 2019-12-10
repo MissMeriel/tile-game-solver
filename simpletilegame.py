@@ -94,6 +94,8 @@ class Game(turtle.Turtle):
             self.fillcolor("gold")
         elif self.items[r][c] == " ":
             self.fillcolor("black")
+        elif self.items[r][c] == " ":
+            self.fillcolor("gold")
 
     #-- map colors to representation in input file
     def get_color2(self, marker):

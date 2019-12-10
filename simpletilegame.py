@@ -53,13 +53,10 @@ class Game(turtle.Turtle):
         board = _board
         board_width = len(board[0])
         board_height = len(board)
-        #print("board size: {},{}".format(board_height, board_width))
         maxdim = board_width
         if board_width < board_height:
             maxdim = board_height
         tile = width / float(board_width)
-        #print(board_width)
-        #print(board_height)
         self.items = board
 
     #-- print the board to stdout
@@ -138,12 +135,9 @@ class Game(turtle.Turtle):
                 int(self.ycor())
                 ### TODO: CHANGE TO 2D ARRAY
                 self.grid.append((self.xcor(), self.ycor()))#-- keep a track of position of each tile
-                #self.forward(tile)
                 self.forward(spacer)
-            #self.back(tile * board_width)
             self.back(spacer * board_width)
             self.right(90)
-            #self.forward(tile)
             self.forward(spacer)
             self.left(90)
 
@@ -158,17 +152,13 @@ class Game(turtle.Turtle):
         ss = minitile / STAMP_SIZE
         self.shapesize(ss)
         for key in pieces:
-            #self.piece_grid.update({key, []})
             p = pieces[key]
-            #print(p)
             for r in range(len(p)):
                 for c in range(len(p[0])):
-                    #print("marker:{} r:{} c:{}".format(p[r][c], r, c))
                     self.get_color(p[r][c])
                     self.stamp()
                     int(self.xcor())
                     int(self.ycor())
-                    #self.piece_grid[key].append((self.xcor(), self.ycor()))  # -- keep track of position of each tile
                     self.forward(minitile)
                 self.back(minitile * len(p[0]))
                 self.right(90)
@@ -178,7 +168,6 @@ class Game(turtle.Turtle):
             if (self.ycor() < 0 and abs(self.ycor())+ minitile * max_height > self.grid[0][-1]):
                 self.setx(self.xcor() + minitile * max_height)
                 self.sety(250 - tile/2)
-                #print("RESET Y")
             self.right(90)
             self.forward(2 * minitile)
             self.left(90)
@@ -228,22 +217,14 @@ class Game(turtle.Turtle):
 
     def draw_solution(self, solution):
         global board_width, board_height, tile
-        #print("in draw_solution()")
-        #print("solution={}".format(solution))
         marker_set = set()
         self.shapesize((tile / STAMP_SIZE))
         for row in range(len(solution)):
-            #print("row={}".format(row))
             for col in range(len(solution[row])):
                 marker = solution[row][col]
                 grid_number = row * board_width + col
                 tile_coords = self.grid[grid_number]
-                #print("tile={}".format(tile))
                 self.get_outline_color(marker)
-                #print("grid_number={} marker={}".format(grid_number, marker))
-                #print("board={}".format(board))
-                #print("board[row]={}".format(board[row]))
-                #print("board[row][col]={}".format(board[row][col]))
                 self.get_color(board[row][col])
                 self.setpos(tile_coords)
                 self.stamp()
@@ -263,18 +244,15 @@ def parse_input_file(input_file):
     key_count = -1
     with open(input_file, 'r') as f:
         line = f.readline().strip('\n')
-        #print(line)
         while line:
             key_count += 1
             curr_fig = []
             while line != "":
                 curr_fig.append(list(line))
                 line = f.readline().strip('\n')
-            #print(curr_fig)
             line = f.readline().strip('\n')
             pieces[key_count] = curr_fig
         board = pieces.pop(key_count)
-        #print(board)
     f.close()
     return board, pieces
 

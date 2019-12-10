@@ -383,11 +383,29 @@ def solutions_are_isomorphic(board1, board2):
 def main():
     #Read in board and pieces from a file and then order pieces
     myBoard, myPieces = parse_input_file(sys.argv[1])
-    myPieces = order_pieces_by_size(myPieces)
+
 
     # print_board(myBoard)
     # for piece in myPieces:
     #     print_piece(myPieces[piece])
+    option = 0
+    try:
+        option_arg = sys.argv[2]
+        if(option_arg == 'none'):
+            option = 0
+        elif(option_arg == 'rotate'):
+            option = 1
+        elif(option_arg == 'flip'):
+            option = 2
+        elif(option_arg == 'both'):
+            option = 3
+    except:
+        option = 0
+
+    # print_board(myBoard)
+    # for piece in myPieces:
+    #     print_piece(myPieces[piece])
+
 
     ### START GUI
     simpletilegame.board = myBoard
@@ -399,6 +417,9 @@ def main():
 
     #Generates all possible sets of pieces that have the right pieces
     #for a solution
+    myPieces = order_pieces_by_size(myPieces)
+
+
     plausibleSets = get_plausible_sets(myBoard, myPieces)
     #print(len(plausibleSets))
 
@@ -408,7 +429,7 @@ def main():
         for plausibleSet in plausibleSets:
             print(plausibleSet)
             print("Commence depth-first search with {} plausible sets".format(len(plausibleSets)))
-            some_solutions = (dfs(myBoard, plausibleSet, 0))
+            some_solutions = (dfs(myBoard, plausibleSet, option))
             if some_solutions != []:
                 allSolutions.append(some_solutions)
     else:
@@ -429,16 +450,19 @@ def main():
                     break
             if validSolution:
                 prunedSolutions.append(new_solution)
-
-        print("There is/are", len(prunedSolutions), "non-isomorphic solutions.")
+        time.sleep(10)
+        print("There is/are", len(prunedSolutions), "non-isomorphic solutions:")
         for aSolution in prunedSolutions:
             print_board(aSolution)
-            print("aSolution:{}".format(aSolution))
+            #print("aSolution:{}".format(aSolution))
             game.draw_solution(aSolution)
+
 
     else:
         print("There are no solutions!")
 
     turtle.mainloop()  # -- creates the main loop for turtle screen
+    time.sleep(3)
+    exit()
 
 main()

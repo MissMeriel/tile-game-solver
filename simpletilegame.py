@@ -22,7 +22,7 @@ screen.setup(window_width, height, 700)
 screen.bgcolor("black")
 screen.tracer(1)
 
-#-- class Game holding graphic attribs and game attribs
+#-- class Game maps graphic attribs to game
 class Game(turtle.Turtle):
     def __init__(self):
         global board_height, board_width, board, tile, width
@@ -53,13 +53,13 @@ class Game(turtle.Turtle):
         board = _board
         board_width = len(board[0])
         board_height = len(board)
-        print("board size: {},{}".format(board_height, board_width))
+        #print("board size: {},{}".format(board_height, board_width))
         maxdim = board_width
         if board_width < board_height:
             maxdim = board_height
         tile = width / float(board_width)
-        print(board_width)
-        print(board_height)
+        #print(board_width)
+        #print(board_height)
         self.items = board
 
     #-- print the board to stdout
@@ -71,6 +71,7 @@ class Game(turtle.Turtle):
             print()
 
     #-- map colors to representation in input file
+<<<<<<< HEAD
     def get_color(self, r,c):
         if self.items[r][c] == "a":
             self.fillcolor("white")
@@ -99,6 +100,9 @@ class Game(turtle.Turtle):
 
     #-- map colors to representation in input file
     def get_color2(self, marker):
+=======
+    def get_color(self, marker):
+>>>>>>> a3474920a53ef3a82cca49c739198ef26d086b65
         if marker == "a":
             self.fillcolor("white")
         elif marker == "b":
@@ -121,6 +125,8 @@ class Game(turtle.Turtle):
             self.fillcolor("gold")
         elif marker == " ":
             self.fillcolor("black")
+        elif marker == "Z":
+            self.fillcolor("seashell")
 
     def get_outline_color(self, marker):
         self.shapesize(outline=5)
@@ -153,10 +159,11 @@ class Game(turtle.Turtle):
     def draw_board(self):
         ss = tile / STAMP_SIZE
         self.shapesize(ss)
+        self.setpos(-250 - 245 + tile / 2, 245 - tile / 2)
         spacer = tile+4
         for r in range(len(self.items)):
             for c in range(len(self.items[0])):
-                self.get_color(r, c)
+                self.get_color(self.items[r][c])
                 self.stamp()
                 int(self.xcor())
                 int(self.ycor())
@@ -176,7 +183,7 @@ class Game(turtle.Turtle):
         max_height = get_max_height(pieces)
         width_offset = self.grid[0][-1]
         #self.setpos(0 + tile/2, width_offset - tile/2)
-        self.setpos(55 + tile*3, width_offset - tile / 2)
+        self.setpos(75 + tile*1, width_offset - tile / 2)
         self.shapesize(1)
         minitile=10
         ss = minitile / STAMP_SIZE
@@ -184,11 +191,11 @@ class Game(turtle.Turtle):
         for key in pieces:
             #self.piece_grid.update({key, []})
             p = pieces[key]
-            print(p)
+            #print(p)
             for r in range(len(p)):
                 for c in range(len(p[0])):
                     #print("marker:{} r:{} c:{}".format(p[r][c], r, c))
-                    self.get_color2(p[r][c])
+                    self.get_color(p[r][c])
                     self.stamp()
                     int(self.xcor())
                     int(self.ycor())
@@ -202,26 +209,12 @@ class Game(turtle.Turtle):
             if (self.ycor() < 0 and abs(self.ycor())+ minitile * max_height > self.grid[0][-1]):
                 self.setx(self.xcor() + minitile * max_height)
                 self.sety(250 - tile/2)
-                print("RESET Y")
+                #print("RESET Y")
             self.right(90)
             self.forward(2 * minitile)
             self.left(90)
 
-    #-- covers the tiles by stamping the gray color on them 
-    def draw_cover(self):
-        self.fillcolor("gray")
-        self.setpos(-200, 200)
-        for r in range(len(self.items)):
-            for c in range(len(self.items[0])):
-                self.stamp()
-                self.forward(tile)
-            self.back(tile*4)
-            self.right(90)
-            self.forward(tile)
-            self.left(90)
-        self.reset_first_click()
-
-    #-- acording to grid list we can locate the exact position of each tile
+    #-- locate each tile in board
     def get_coordinate(self, r,c):
         if (r,c) == (0,0):
             return self.grid[0]
@@ -266,74 +259,26 @@ class Game(turtle.Turtle):
 
     def draw_solution(self, solution):
         global board_width, board_height, tile
-        print("in draw_solution()")
-        print("solution={}".format(solution))
+        #print("in draw_solution()")
+        #print("solution={}".format(solution))
         marker_set = set()
         self.shapesize((tile / STAMP_SIZE))
         for row in range(len(solution)):
-            print("row={}".format(row))
+            #print("row={}".format(row))
             for col in range(len(solution[row])):
                 marker = solution[row][col]
                 grid_number = row * board_width + col
                 tile_coords = self.grid[grid_number]
-                print("tile={}".format(tile))
+                #print("tile={}".format(tile))
                 self.get_outline_color(marker)
-                print("grid_number={} marker={}".format(grid_number, marker))
-                print("board={}".format(board))
-                print("board[row]={}".format(board[row]))
-                print("board[row][col]={}".format(board[row][col]))
-                self.get_color2(board[row][col])
+                #print("grid_number={} marker={}".format(grid_number, marker))
+                #print("board={}".format(board))
+                #print("board[row]={}".format(board[row]))
+                #print("board[row][col]={}".format(board[row][col]))
+                self.get_color(board[row][col])
                 self.setpos(tile_coords)
                 self.stamp()
-
-    #-- metod to select the first tile
-    #-- keeps  a track of temporary coordinates, and selected item
-    def first(self, x,y):
-        self.temp_coordinates.clear()
-        self.temp_selected.clear()
-        #-- converting cartesian board to screen (row, column)
-        c = int(x+(width/2)) // tile
-        r = int(-y +(height/2)) //tile
-        self.get_color(r,c)
-        self.goto(self.get_coordinate(r,c))
-        self.stamp()
-        self.temp_selected.append(self.items[r][c])
-        self.temp_coordinates.append(self.pos())
-        self.reset_second_click()
-    #-- metod to select the second tile
-    #-- keeps  a track of temporary coordinates, and selected item
-    def second(self, x,y):
-        c = int(x+(width/2)) // tile
-        r = int(-y +(height/2)) //tile
-        self.get_color(r,c)
-        self.goto(self.get_coordinate(r,c))
-        if self.pos() == self.temp_coordinates[0]:
-            print("this is the first color, choose second color!")
-        else:
-            self.stamp()
-            self.temp_selected.append(self.items[r][c])
-            self.temp_coordinates.append(self.pos())
-            self.check()
-    #-- checks if two selected tiles are match and reset the temporary trackers    
-    def check(self):
-        if self.temp_selected[0] == self.temp_selected[1]:
-            print("correct")
-            self.correct += 1
-            if self.correct == 10:               
-                print("You solve the puzzle with: ", self.correct + self.count, "moves.")
-            self.reset_first_click()
-        else:
-            self.count +=1
-            self.fillcolor("gray")
-            for coordinate in self.temp_coordinates:
-                self.goto(coordinate)
-                self.stamp()
-                self.reset_first_click()
-    #-- reseting the mouse event for first and second selection 
-    def reset_first_click(self):
-        turtle.onscreenclick(self.first)    
-    def reset_second_click(self):
-        turtle.onscreenclick(self.second)
+        time.sleep(2)
 
 def get_max_height(pieces):
     height = 0
